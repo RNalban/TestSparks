@@ -1,0 +1,18 @@
+server- core.sql.dev.eradahcapital.com,55543
+banksmartdbadm
+
+--Retail
+select b.OurBranchID, b.AccountID, a.ClientID, b.Name  (to excel sheet)
+from t_Account a with (nolock)
+inner join t_AccountBalance b with (nolock) on a.OurBranchID = b.OurBranchID and a.AccountID = b.AccountID
+and a.Status = '' and isnull(a.AllowCreditTransaction,0) = 0 and ISNULL(a.AllowDebitTransaction, 0) = 0
+and b.ClearBalance > 100 and a.OurBranchID = '02' and a.ProductID = 'ZACCIN'
+
+-- Corporate
+select ClientID, count(*) Counts
+from t_Account a with (nolock)
+inner join t_AccountBalance b with (nolock) on a.OurBranchID = b.OurBranchID and a.AccountID = b.AccountID
+and a.Status = '' and isnull(a.AllowCreditTransaction,0) = 0 and ISNULL(a.AllowDebitTransaction, 0) = 0
+and b.ClearBalance > 100 and a.OurBranchID = '03' and a.ProductID = 'CCAAED'
+group by ClientID
+having COUNT(ClientID) > 1
